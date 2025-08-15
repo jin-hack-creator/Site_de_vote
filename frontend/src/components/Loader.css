@@ -1,0 +1,26 @@
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--primary-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+}
+
+.loader-logo {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--secondary-color);
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(107, 70, 193, 0.6);
+}

@@ -22,3 +22,26 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.container {
+  max-width: 1200px;
+}
+
+.btn-primary {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.shadow-sm {
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+}

@@ -1,71 +1,116 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
-import ParticipantCard from '../components/ParticipantCard';
-import VoteModal from '../components/VoteModal';
-import { getParticipants } from '../services/api';
-import { Participant } from '../types/participant';
+import { Container, Button } from 'react-bootstrap';
+import { motion, AnimatePresence, Transition } from 'framer-motion';
+import { ArrowRight } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
+import Loader from '../components/Loader';
 
 const HomePage = () => {
-  const [participants, setParticipants] = useState<Participant[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [selectedParticipantId, setSelectedParticipantId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchParticipants = async () => {
-      try {
-        setLoading(true);
-        const data = await getParticipants();
-        setParticipants(data);
-      } catch (err) {
-        setError('Impossible de charger les participants. Veuillez réessayer plus tard.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 5000); // 5 seconds
 
-    fetchParticipants();
+    return () => clearTimeout(timer);
   }, []);
 
-  const handleVoteClick = (participantId: string) => {
-    setSelectedParticipantId(participantId);
-    setShowModal(true);
+  const handleNavigateToCandidates = () => {
+    navigate('/candidats');
   };
 
-  const handleModalHide = () => {
-    setShowModal(false);
-    setSelectedParticipantId(null);
+  const title = "Le Grand Concours de Vote";
+  const titleVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+      },
+    },
+  };
+  const letterVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const pageVariants = {
+    initial: {
+      opacity: 0,
+    },
+    in: {
+      opacity: 1,
+    },
+    out: {
+      opacity: 0,
+    },
+  };
+
+  const pageTransition: Transition = {
+    type: 'tween',
+    ease: 'anticipate',
+    duration: 0.5,
   };
 
   return (
-    <Container className="py-4">
-      {loading && (
-        <div className="text-center py-5">
-          <Spinner animation="border" role="status" style={{ width: '3rem', height: '3rem' }}>
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </div>
-      )}
-      {error && <Alert variant="danger">{error}</Alert>}
-      {!loading && !error && (
-        <Row xs={1} md={2} lg={3} className="g-4">
-          {participants.map((participant, index) => (
-            <Col key={participant._id} className="fade-in-card" style={{ animationDelay: `${index * 100}ms` }}>
-              <ParticipantCard participant={participant} onVote={handleVoteClick} />
-            </Col>
-          ))}
-        </Row>
-      )}
+    <>
+      <AnimatePresence>
+        {loading && <Loader />}
+      </AnimatePresence>
 
-      <VoteModal
-        show={showModal}
-        onHide={handleModalHide}
-        participantId={selectedParticipantId}
-      />
-    </Container>
+      {!loading && (
+        <motion.div
+          initial="initial"
+          animate="in"
+          exit="out"
+          variants={pageVariants}
+          transition={pageTransition}
+        >
+          <div className="home-hero">
+            <Container className="text-center">
+              <motion.h1
+                variants={titleVariants}
+                initial="hidden"
+                animate="visible"
+                className="display-3"
+              >
+                {title.split("").map((char, index) => (
+                  <motion.span key={index} variants={letterVariants}>
+                    {char}
+                  </motion.span>
+                ))}
+              </motion.h1>
+              <motion.p
+                className="lead mt-3"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 1.5 }}
+              >
+                Votre voix compte. Choisissez votre favori et propulsez-le vers la victoire.
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 2 }}
+              >
+                <Button
+                  variant="light"
+                  size="lg"
+                  className="cta-button mt-4"
+                  onClick={handleNavigateToCandidates}
+                >
+                  Voir les candidats <ArrowRight className="ms-2" />
+                </Button>
+              </motion.div>
+            </Container>
+          </div>
+        </motion.div>
+      )}
+    </>
   );
 };
 
 export default HomePage;
+

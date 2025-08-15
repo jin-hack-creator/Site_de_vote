@@ -1,38 +1,39 @@
 import React from 'react';
-import { Container, Navbar } from 'react-bootstrap';
-import { Outlet } from 'react-router-dom';
+import { Container, Navbar, Nav } from 'react-bootstrap';
+import { Outlet, Link } from 'react-router-dom';
 
 const Layout = () => {
   return (
-    <>
-      <Navbar variant="dark" style={{ backgroundColor: 'var(--primary-color)' }}>
+    <div className="d-flex flex-column min-vh-100">
+      <Navbar variant="dark" expand="lg" style={{ backgroundColor: 'var(--primary-color)' }} sticky="top">
         <Container>
-          <Navbar.Brand href="/">YabetooPay Vote</Navbar.Brand>
+          <Navbar.Brand as={Link} to="/">YabetooPay Vote</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ms-auto">
+              <Nav.Link as={Link} to="/" className="nav-link-custom">Accueil</Nav.Link>
+              <Nav.Link as={Link} to="/reglement" className="nav-link-custom">Règlement</Nav.Link>
+              <Nav.Link as={Link} to="/contact" className="nav-link-custom">Contact</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
 
-      <div className="hero-section">
-        <Container>
-          <h1>Le Grand Concours</h1>
-          <p>Votez pour votre candidat favori et menez-le à la victoire !</p>
-        </Container>
-      </div>
-
-      <main>
+      <main className="flex-grow-1">
         <Outlet />
       </main>
 
-      <footer className="app-footer">
+      <footer className="app-footer mt-auto">
         <Container>
           <p className="mb-2">&copy; 2025 YabetooPay Vote. Tous droits réservés.</p>
-          <ul className="footer-links">
-            <li><a href="#">Règlement</a></li>
-            <li><a href="#">Mentions Légales</a></li>
-            <li><a href="#">Contact</a></li>
-          </ul>
+          <div className="footer-links d-flex justify-content-center">
+            <Link to="/reglement" className="footer-link px-2">Règlement</Link>
+            <Link to="/mentions-legales" className="footer-link px-2">Mentions Légales</Link>
+            <Link to="/contact" className="footer-link px-2">Contact</Link>
+          </div>
         </Container>
       </footer>
-    </>
+    </div>
   );
 };
 
